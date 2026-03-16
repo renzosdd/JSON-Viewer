@@ -257,11 +257,14 @@
 
   function cacheEls() {
     [
-      'jsonInput','statusBox','treeView','rawView','tableView','diffView','searchInput','searchMeta','nodeDetails','viewerMeta',
+      'jsonInput','statusBox','treeView','rawView','tableView','diffView','searchInput','searchMeta','nodeDetails',
       'languageSelect','themeSelect','pathFormat','indentSize','rememberLastJson','showTypeBadges','openShareSmallOnly',
       'settingsModal','viewMode','searchKeys','searchValues','searchPaths','caseSensitive','filterMatchesOnly','hideNulls','hideEmpty',
       'typeFilter','leftDiffInput','rightDiffInput','urlInput','fileInput','dropZone'
     ].forEach(id => el[id] = $(id));
+
+    // Keep camelCase access in JS while matching the kebab-case id in HTML.
+    el.viewerMeta = $('viewer-meta');
   }
 
   function t(key) {
