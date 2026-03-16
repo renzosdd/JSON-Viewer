@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>JSON Viewer Pro</title>
+  <meta name="description" content="Modern browser-based JSON viewer with search, filters, diff, table view, and shareable links." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="app" class="app">
+    <header class="topbar">
+      <div class="brand">
+        <div class="brand__logo">{ }</div>
+        <div>
+          <h1 id="app-title">JSON Viewer Pro</h1>
+          <p id="app-subtitle">Visual, private, browser-only JSON explorer</p>
+        </div>
+      </div>
+      <div class="topbar__actions">
+        <label class="switch-group">
+          <span id="lang-label">Language</span>
+          <select id="languageSelect" class="select compact">
+            <option value="en">English</option>
+            <option value="es">Español</option>
+          </select>
+        </label>
+        <label class="switch-group">
+          <span id="theme-label">Theme</span>
+          <select id="themeSelect" class="select compact">
+            <option value="auto">Auto</option>
+            <option value="light">Light</option>
+            <option value="dark">Dark</option>
+          </select>
+        </label>
+        <button id="settingsBtn" class="button ghost">⚙ <span id="settings-btn-label">Settings</span></button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <section class="panel input-panel">
+        <div class="panel__header">
+          <h2 id="input-title">Input</h2>
+          <div class="row gap-sm wrap">
+            <button id="pasteSampleBtn" class="button ghost">Sample</button>
+            <button id="formatBtn" class="button ghost">Beautify</button>
+            <button id="minifyBtn" class="button ghost">Minify</button>
+            <button id="clearBtn" class="button ghost danger">Clear</button>
+          </div>
+        </div>
+
+        <div class="input-modes">
+          <div class="tabs" id="inputTabs">
+            <button class="tab active" data-input-tab="paste" id="tab-paste">Paste</button>
+            <button class="tab" data-input-tab="file" id="tab-file">File</button>
+            <button class="tab" data-input-tab="url" id="tab-url">URL</button>
+            <button class="tab" data-input-tab="diff" id="tab-diff">Diff</button>
+          </div>
+
+          <div class="tab-content active" data-input-panel="paste">
+            <label class="label" for="jsonInput" id="json-input-label">Paste your JSON</label>
+            <textarea id="jsonInput" spellcheck="false" placeholder="{\n  &quot;hello&quot;: &quot;world&quot;\n}"></textarea>
+            <div class="row gap-sm wrap input-actions">
+              <button id="loadJsonBtn" class="button primary">Load JSON</button>
+              <button id="copyRawBtn" class="button ghost">Copy Raw</button>
+            </div>
+          </div>
+
+          <div class="tab-content" data-input-panel="file">
+            <label class="label" id="drop-label">Drop a .json file here or browse</label>
+            <div id="dropZone" class="dropzone">
+              <input id="fileInput" type="file" accept=".json,application/json" hidden />
+              <p id="drop-help">Drag & drop a file, or click to select</p>
+            </div>
+          </div>
+
+          <div class="tab-content" data-input-panel="url">
+            <label class="label" for="urlInput" id="url-label">Load JSON from URL</label>
+            <div class="row gap-sm wrap">
+              <input id="urlInput" class="text-input flex-1" type="url" placeholder="https://example.com/data.json" />
+              <button id="loadUrlBtn" class="button primary">Fetch</button>
+            </div>
+            <p class="hint" id="url-hint">Works when the remote server allows CORS in your browser.</p>
+          </div>
+
+          <div class="tab-content" data-input-panel="diff">
+            <div class="grid-2">
+              <div>
+                <label class="label" for="leftDiffInput" id="left-json-label">Left JSON</label>
+                <textarea id="leftDiffInput" spellcheck="false" class="small-textarea"></textarea>
+              </div>
+              <div>
+                <label class="label" for="rightDiffInput" id="right-json-label">Right JSON</label>
+                <textarea id="rightDiffInput" spellcheck="false" class="small-textarea"></textarea>
+              </div>
+            </div>
+            <div class="row gap-sm wrap input-actions">
+              <button id="runDiffBtn" class="button primary">Compare</button>
+              <button id="loadLeftFromMainBtn" class="button ghost">Use main JSON on left</button>
+              <button id="loadRightFromMainBtn" class="button ghost">Use main JSON on right</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="statusBox" class="status" aria-live="polite"></div>
+      </section>
+
+      <section class="panel viewer-panel">
+        <div class="panel__header viewer-header">
+          <div>
+            <h2 id="viewer-title">Viewer</h2>
+            <p id="viewer-meta" class="muted">No JSON loaded yet</p>
+          </div>
+          <div class="row gap-sm wrap">
+            <button id="expandAllBtn" class="button ghost">Expand all</button>
+            <button id="collapseAllBtn" class="button ghost">Collapse all</button>
+            <button id="shareBtn" class="button ghost">Share link</button>
+            <button id="exportBtn" class="button ghost">Export JSON</button>
+          </div>
+        </div>
+
+        <div class="toolbar grid-toolbar">
+          <div class="search-block">
+            <input id="searchInput" class="text-input" type="text" placeholder="Search by key, value, or path" />
+            <div class="row gap-sm wrap mt-sm">
+              <label><input id="searchKeys" type="checkbox" checked /> <span id="search-keys-label">Keys</span></label>
+              <label><input id="searchValues" type="checkbox" checked /> <span id="search-values-label">Values</span></label>
+              <label><input id="searchPaths" type="checkbox" checked /> <span id="search-paths-label">Paths</span></label>
+              <label><input id="caseSensitive" type="checkbox" /> <span id="case-sensitive-label">Case sensitive</span></label>
+            </div>
+            <div class="row gap-sm wrap mt-sm">
+              <button id="findBtn" class="button primary">Find</button>
+              <button id="prevMatchBtn" class="button ghost">Previous</button>
+              <button id="nextMatchBtn" class="button ghost">Next</button>
+              <span id="searchMeta" class="muted">0 matches</span>
+            </div>
+          </div>
+
+          <div class="filters-block">
+            <div class="row gap-sm wrap">
+              <label><input id="filterMatchesOnly" type="checkbox" /> <span id="matches-only-label">Show only matches</span></label>
+              <label><input id="hideNulls" type="checkbox" /> <span id="hide-nulls-label">Hide nulls</span></label>
+              <label><input id="hideEmpty" type="checkbox" /> <span id="hide-empty-label">Hide empty arrays/objects</span></label>
+            </div>
+            <div class="row gap-sm wrap mt-sm">
+              <label class="switch-group inline">
+                <span id="type-filter-label">Type</span>
+                <select id="typeFilter" class="select">
+                  <option value="all">All</option>
+                  <option value="object">Object</option>
+                  <option value="array">Array</option>
+                  <option value="string">String</option>
+                  <option value="number">Number</option>
+                  <option value="boolean">Boolean</option>
+                  <option value="null">Null</option>
+                </select>
+              </label>
+              <label class="switch-group inline">
+                <span id="view-mode-label">View</span>
+                <select id="viewMode" class="select">
+                  <option value="tree">Tree</option>
+                  <option value="raw">Raw</option>
+                  <option value="table">Table</option>
+                  <option value="diff">Diff</option>
+                </select>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="viewer-grid">
+          <div class="viewer-main">
+            <div id="treeView" class="view active"></div>
+            <pre id="rawView" class="view raw-view"></pre>
+            <div id="tableView" class="view table-view"></div>
+            <div id="diffView" class="view diff-view"></div>
+          </div>
+          <aside class="detail-panel">
+            <div class="detail-panel__header">
+              <h3 id="details-title">Node details</h3>
+              <button id="copyDetailsBtn" class="button ghost compact">Copy</button>
+            </div>
+            <div id="nodeDetails" class="node-details empty-state">Select a node to inspect it.</div>
+          </aside>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="settingsModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
+    <div class="modal__backdrop" data-close-modal="true"></div>
+    <div class="modal__content">
+      <div class="panel__header">
+        <h2 id="settings-modal-title">Settings</h2>
+        <button id="closeSettingsBtn" class="button ghost">✕</button>
+      </div>
+      <div class="settings-grid">
+        <label class="field">
+          <span id="path-format-label">Path format</span>
+          <select id="pathFormat" class="select">
+            <option value="dot">Dot notation</option>
+            <option value="bracket">Bracket notation</option>
+            <option value="jsonpath">JSONPath</option>
+          </select>
+        </label>
+        <label class="field">
+          <span id="indent-label">Indent size</span>
+          <input id="indentSize" class="text-input" type="number" min="2" max="8" step="1" value="2" />
+        </label>
+        <label class="field checkbox-field">
+          <input id="rememberLastJson" type="checkbox" checked />
+          <span id="remember-json-label">Remember last JSON</span>
+        </label>
+        <label class="field checkbox-field">
+          <input id="showTypeBadges" type="checkbox" checked />
+          <span id="type-badges-label">Show type badges</span>
+        </label>
+        <label class="field checkbox-field">
+          <input id="openShareSmallOnly" type="checkbox" checked />
+          <span id="share-warning-label">Warn for large share links</span>
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <template id="treeNodeTemplate">
+    <div class="tree-node"></div>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
