@@ -81,6 +81,8 @@
       details: 'Node details',
       settings: 'Settings',
       settingsTitle: 'Settings',
+      inputAction: 'Action',
+      apply: 'Apply',
       pathFormat: 'Path format',
       indentSize: 'Indent size',
       rememberLast: 'Remember last JSON',
@@ -176,6 +178,8 @@
       details: 'Detalle del nodo',
       settings: 'Configuración',
       settingsTitle: 'Configuración',
+      inputAction: 'Acción',
+      apply: 'Aplicar',
       pathFormat: 'Formato de ruta',
       indentSize: 'Tamaño de indentación',
       rememberLast: 'Recordar último JSON',
@@ -341,10 +345,10 @@
     $('runDiffBtn').textContent = t('compare');
     $('loadLeftFromMainBtn').textContent = t('useMainLeft');
     $('loadRightFromMainBtn').textContent = t('useMainRight');
-    $('formatBtn').textContent = t('beautify');
-    $('minifyBtn').textContent = t('minify');
-    $('clearBtn').textContent = t('clear');
-    $('pasteSampleBtn').textContent = t('sample');
+    $('input-action-label').textContent = t('inputAction');
+    $('runInputActionBtn').textContent = t('apply');
+    $('clearBtn').setAttribute('aria-label', t('clear'));
+    $('clearBtn').setAttribute('title', t('clear'));
     $('expandAllBtn').textContent = t('expandAll');
     $('collapseAllBtn').textContent = t('collapseAll');
     $('shareBtn').textContent = t('share');
@@ -378,6 +382,8 @@
     ['auto','light','dark'].forEach((k, i) => themeOptions[i].textContent = t(`themes.${k}`));
     const pathOptions = $('pathFormat').options;
     ['dot','bracket','jsonpath'].forEach((k, i) => pathOptions[i].textContent = t(`pathFormats.${k}`));
+    const inputActionOptions = $('inputActionSelect').options;
+    ['sample','beautify','minify'].forEach((k, i) => inputActionOptions[i].textContent = t(k));
     const viewOptions = $('viewMode').options;
     ['tree','raw','table','diff'].forEach((k, i) => viewOptions[i].textContent = t(k));
     const typeOptions = $('typeFilter').options;
@@ -998,13 +1004,20 @@
 
   function bindEvents() {
     $('loadJsonBtn').addEventListener('click', () => parseAndLoad(el.jsonInput.value));
-    $('pasteSampleBtn').addEventListener('click', () => {
-      const text = JSON.stringify(SAMPLE_JSON, null, state.settings.indentSize);
-      el.jsonInput.value = text;
-      parseAndLoad(text);
+    $('runInputActionBtn').addEventListener('click', () => {
+      const action = $('inputActionSelect').value;
+      if (action === 'sample') {
+        const text = JSON.stringify(SAMPLE_JSON, null, state.settings.indentSize);
+        el.jsonInput.value = text;
+        parseAndLoad(text);
+        return;
+      }
+      if (action === 'beautify') {
+        formatMainJson(false);
+        return;
+      }
+      if (action === 'minify') formatMainJson(true);
     });
-    $('formatBtn').addEventListener('click', () => formatMainJson(false));
-    $('minifyBtn').addEventListener('click', () => formatMainJson(true));
     $('clearBtn').addEventListener('click', () => {
       el.jsonInput.value = '';
       el.leftDiffInput.value = '';

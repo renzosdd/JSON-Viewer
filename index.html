@@ -26,11 +26,17 @@
       <section class="panel input-panel">
         <div class="panel__header">
           <h2 id="input-title">Input</h2>
-          <div class="row gap-sm wrap">
-            <button id="pasteSampleBtn" class="button ghost">Sample</button>
-            <button id="formatBtn" class="button ghost">Beautify</button>
-            <button id="minifyBtn" class="button ghost">Minify</button>
-            <button id="clearBtn" class="button ghost danger">Clear</button>
+          <div class="row gap-sm wrap input-tools">
+            <label class="switch-group inline">
+              <span id="input-action-label">Action</span>
+              <select id="inputActionSelect" class="select compact">
+                <option value="sample">Sample</option>
+                <option value="beautify">Beautify</option>
+                <option value="minify">Minify</option>
+              </select>
+            </label>
+            <button id="runInputActionBtn" class="button ghost compact">Apply</button>
+            <button id="clearBtn" class="button ghost danger compact" aria-label="Clear input" title="Clear input">🗑</button>
           </div>
         </div>
 

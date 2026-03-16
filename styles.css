@@ -72,6 +72,8 @@ body {
 .brand p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
 .topbar__actions, .row { display: flex; align-items: center; }
 .topbar__actions { gap: 8px; }
+.input-tools { justify-content: flex-end; }
+#clearBtn { min-width: 42px; }
 .wrap { flex-wrap: wrap; }
 .gap-sm { gap: 8px; }
 .mt-sm { margin-top: 10px; }
