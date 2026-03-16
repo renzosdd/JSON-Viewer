@@ -60,7 +60,7 @@ body {
 }
 .topbar {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 18px 20px; gap: 16px; margin-bottom: 20px;
+  padding: 16px 20px; gap: 16px; margin-bottom: 18px;
 }
 .brand { display: flex; align-items: center; gap: 14px; }
 .brand__logo {
@@ -71,6 +71,9 @@ body {
 .brand h1 { margin: 0; font-size: 1.3rem; }
 .brand p { margin: 4px 0 0; color: var(--muted); font-size: 0.95rem; }
 .topbar__actions, .row { display: flex; align-items: center; }
+.topbar__actions { gap: 8px; }
+.input-tools { justify-content: flex-end; }
+#clearBtn { min-width: 42px; }
 .wrap { flex-wrap: wrap; }
 .gap-sm { gap: 8px; }
 .mt-sm { margin-top: 10px; }
@@ -146,16 +149,17 @@ textarea {
 .status.warn { color: var(--warning); border-color: rgba(251,191,36,0.3); }
 
 .toolbar {
-  display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(300px, 0.9fr); gap: 14px;
-  margin-bottom: 14px;
+  display: grid; grid-template-columns: 1fr; gap: 12px;
+  margin-bottom: 12px;
 }
 .search-block, .filters-block, .detail-panel, .viewer-main {
   background: var(--panel-soft); border: 1px solid var(--border); border-radius: 16px;
 }
-.search-block, .filters-block { padding: 14px; }
+.search-block { display: grid; gap: 10px; }
+.search-block, .filters-block { padding: 12px 14px; }
 .viewer-grid {
-  display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 14px;
-  min-height: 760px;
+  display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 12px;
+  min-height: 720px;
 }
 .viewer-main { padding: 14px; overflow: auto; }
 .detail-panel { padding: 14px; overflow: auto; }
@@ -227,7 +231,7 @@ textarea {
 .switch-group { display: flex; align-items: center; gap: 8px; }
 .inline { display: inline-flex; }
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .field { display: flex; flex-direction: column; gap: 8px; }
 .checkbox-field { flex-direction: row; align-items: center; }
 .modal {
@@ -235,7 +239,7 @@ textarea {
 }
 .modal__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,0.45); }
 .modal__content {
-  position: relative; z-index: 1; width: min(720px, calc(100vw - 32px)); padding: 18px;
+  position: relative; z-index: 1; width: min(760px, calc(100vw - 32px)); padding: 18px;
 }
 
 mark {
@@ -249,8 +253,7 @@ mark {
 
 @media (max-width: 800px) {
   .toolbar, .settings-grid, .grid-2, .diff-grid { grid-template-columns: 1fr; }
-  .topbar { flex-direction: column; align-items: stretch; }
-  .topbar__actions { justify-content: space-between; flex-wrap: wrap; }
+  .topbar { flex-direction: row; align-items: center; }
   .app { padding: 12px; }
   .panel { padding: 14px; }
 }
