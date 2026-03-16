@@ -84,6 +84,12 @@ body {
   grid-template-columns: minmax(340px, 430px) minmax(0, 1fr);
   gap: 20px;
 }
+.layout.focus-viewer {
+  grid-template-columns: minmax(0, 1fr);
+}
+.layout.focus-viewer .input-panel {
+  display: none;
+}
 .panel { padding: 18px; min-width: 0; }
 .panel__header {
   display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
@@ -157,9 +163,22 @@ textarea {
 }
 .search-block { display: grid; gap: 10px; }
 .search-block, .filters-block { padding: 12px 14px; }
+.compact-search {
+  max-width: 520px;
+  justify-self: start;
+}
+.text-input.compact {
+  padding: 8px 10px;
+}
 .viewer-grid {
   display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 12px;
   min-height: 720px;
+}
+.viewer-grid.details-hidden {
+  grid-template-columns: minmax(0, 1fr);
+}
+.viewer-grid.details-hidden .detail-panel {
+  display: none;
 }
 .viewer-main { padding: 14px; overflow: auto; }
 .detail-panel { padding: 14px; overflow: auto; }

@@ -61,6 +61,10 @@
       sample: 'Sample',
       expandAll: 'Expand all',
       collapseAll: 'Collapse all',
+      hideInput: 'Hide input',
+      showInput: 'Show input',
+      hideNodePanel: 'Hide node panel',
+      showNodePanel: 'Show node panel',
       share: 'Share link',
       export: 'Export JSON',
       keys: 'Keys',
@@ -158,6 +162,10 @@
       sample: 'Ejemplo',
       expandAll: 'Expandir todo',
       collapseAll: 'Colapsar todo',
+      hideInput: 'Ocultar entrada',
+      showInput: 'Mostrar entrada',
+      hideNodePanel: 'Ocultar panel de nodo',
+      showNodePanel: 'Mostrar panel de nodo',
       share: 'Compartir link',
       export: 'Exportar JSON',
       keys: 'Keys',
@@ -239,6 +247,8 @@
     activeMatchIndex: -1,
     selectedPath: null,
     viewMode: 'tree',
+    inputHidden: false,
+    detailsHidden: false,
     diffLeft: null,
     diffRight: null,
     diffLines: [],
@@ -260,11 +270,20 @@
       'jsonInput','statusBox','treeView','rawView','tableView','diffView','searchInput','searchMeta','nodeDetails',
       'languageSelect','themeSelect','pathFormat','indentSize','rememberLastJson','showTypeBadges','openShareSmallOnly',
       'settingsModal','viewMode','searchKeys','searchValues','searchPaths','caseSensitive','filterMatchesOnly','hideNulls','hideEmpty',
-      'typeFilter','leftDiffInput','rightDiffInput','urlInput','fileInput','dropZone'
+      'typeFilter','leftDiffInput','rightDiffInput','urlInput','fileInput','dropZone','toggleInputPanelBtn','toggleDetailsPanelBtn'
     ].forEach(id => el[id] = $(id));
 
     // Keep camelCase access in JS while matching the kebab-case id in HTML.
     el.viewerMeta = $('viewer-meta');
+    el.layout = document.querySelector('.layout');
+    el.viewerGrid = document.querySelector('.viewer-grid');
+  }
+
+  function renderPanelVisibility() {
+    el.layout?.classList.toggle('focus-viewer', state.inputHidden);
+    el.viewerGrid?.classList.toggle('details-hidden', state.detailsHidden);
+    el.toggleInputPanelBtn.textContent = state.inputHidden ? t('showInput') : t('hideInput');
+    el.toggleDetailsPanelBtn.textContent = state.detailsHidden ? t('showNodePanel') : t('hideNodePanel');
   }
 
   function t(key) {
@@ -354,6 +373,8 @@
     $('clearBtn').setAttribute('title', t('clear'));
     $('expandAllBtn').textContent = t('expandAll');
     $('collapseAllBtn').textContent = t('collapseAll');
+    $('toggleInputPanelBtn').textContent = state.inputHidden ? t('showInput') : t('hideInput');
+    $('toggleDetailsPanelBtn').textContent = state.detailsHidden ? t('showNodePanel') : t('hideNodePanel');
     $('shareBtn').textContent = t('share');
     $('exportBtn').textContent = t('export');
     $('search-keys-label').textContent = t('keys');
@@ -403,6 +424,7 @@
     }
     renderSearchMeta();
     updateViewerMeta();
+    renderPanelVisibility();
     renderCurrentView();
   }
 
@@ -1042,6 +1064,14 @@
     });
     $('expandAllBtn').addEventListener('click', () => expandCollapseAll(true));
     $('collapseAllBtn').addEventListener('click', () => expandCollapseAll(false));
+    $('toggleInputPanelBtn').addEventListener('click', () => {
+      state.inputHidden = !state.inputHidden;
+      renderPanelVisibility();
+    });
+    $('toggleDetailsPanelBtn').addEventListener('click', () => {
+      state.detailsHidden = !state.detailsHidden;
+      renderPanelVisibility();
+    });
     $('findBtn').addEventListener('click', performSearch);
     $('nextMatchBtn').addEventListener('click', () => focusActiveMatch(1));
     $('prevMatchBtn').addEventListener('click', () => focusActiveMatch(-1));
