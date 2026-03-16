@@ -103,6 +103,8 @@
             <p id="viewer-meta" class="muted">No JSON loaded yet</p>
           </div>
           <div class="row gap-sm wrap">
+            <button id="toggleInputPanelBtn" class="button ghost compact">Hide input</button>
+            <button id="toggleDetailsPanelBtn" class="button ghost compact">Hide node panel</button>
             <button id="expandAllBtn" class="button ghost">Expand all</button>
             <button id="collapseAllBtn" class="button ghost">Collapse all</button>
             <button id="shareBtn" class="button ghost">Share link</button>
@@ -111,8 +113,8 @@
         </div>
 
         <div class="toolbar grid-toolbar">
-          <div class="search-block">
-            <input id="searchInput" class="text-input" type="text" placeholder="Search by key, value, or path" />
+          <div class="search-block compact-search">
+            <input id="searchInput" class="text-input compact" type="text" placeholder="Search by key, value, or path" />
             <div class="row gap-sm wrap mt-sm">
               <label><input id="searchKeys" type="checkbox" checked /> <span id="search-keys-label">Keys</span></label>
               <label><input id="searchValues" type="checkbox" checked /> <span id="search-values-label">Values</span></label>
@@ -120,9 +122,9 @@
               <label><input id="caseSensitive" type="checkbox" /> <span id="case-sensitive-label">Case sensitive</span></label>
             </div>
             <div class="row gap-sm wrap mt-sm">
-              <button id="findBtn" class="button primary">Find</button>
-              <button id="prevMatchBtn" class="button ghost">Previous</button>
-              <button id="nextMatchBtn" class="button ghost">Next</button>
+              <button id="findBtn" class="button primary compact">Find</button>
+              <button id="prevMatchBtn" class="button ghost compact">Previous</button>
+              <button id="nextMatchBtn" class="button ghost compact">Next</button>
               <span id="searchMeta" class="muted">0 matches</span>
             </div>
           </div>
