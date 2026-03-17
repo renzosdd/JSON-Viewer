@@ -10,7 +10,7 @@ Static browser-based JSON viewer built with vanilla HTML, CSS and JavaScript.
 - Search by key, value, and path with next/previous navigation
 - Filters for matches only, nulls, empty arrays/objects, and type
 - Raw, table, and diff views
-- Beautify, minify, export, and shareable URL hash links
+- Beautify and minify tools
 - English/Spanish toggle
 - Light/dark/auto theme
 - Settings persisted in localStorage
@@ -24,4 +24,3 @@ No build step is required.
 ## Notes
 
 - URL loading depends on the target server allowing CORS in the browser.
-- Share links embed JSON in the URL hash, so they are best for small/medium payloads.

@@ -65,8 +65,6 @@
       showInput: 'Show input',
       hideNodePanel: 'Hide node panel',
       showNodePanel: 'Show node panel',
-      share: 'Share link',
-      export: 'Export JSON',
       keys: 'Keys',
       values: 'Values',
       paths: 'Paths',
@@ -91,21 +89,17 @@
       indentSize: 'Indent size',
       rememberLast: 'Remember last JSON',
       typeBadges: 'Show type badges',
-      warnShare: 'Warn for large share links',
       language: 'Language',
       theme: 'Theme',
       statusReady: 'Ready.',
       loaded: 'JSON loaded successfully.',
       invalidJson: 'Invalid JSON. Check the syntax and try again.',
       copied: 'Copied to clipboard.',
-      exported: 'JSON exported.',
       cleared: 'Input cleared.',
       fetched: 'JSON fetched successfully.',
       fetchError: 'Could not fetch JSON from URL. The server may block browser access (CORS) or the response is invalid.',
       noMatches: '0 matches',
       selectNode: 'Select a node to inspect it.',
-      linkCopied: 'Share link copied.',
-      linkTooLarge: 'The JSON is too large for a safe shareable URL. Export it instead or use smaller content.',
       tableRows: 'rows',
       copiedPath: 'Path copied.',
       copiedValue: 'Value copied.',
@@ -115,8 +109,6 @@
       rawEmpty: 'Load JSON to see the raw formatted view.',
       tableEmpty: 'Load JSON to see the table view.',
       diffEmpty: 'Run a diff to see changes here.',
-      sharingNotice: 'Share links embed the JSON in the URL hash for browser-only sharing. Best for small and medium payloads.',
-      loadFromHash: 'Loaded JSON from share link.',
       filterApplied: 'Filters applied.',
       browseTitle: 'Open JSON file',
       root: 'root',
@@ -166,8 +158,6 @@
       showInput: 'Mostrar entrada',
       hideNodePanel: 'Ocultar panel de nodo',
       showNodePanel: 'Mostrar panel de nodo',
-      share: 'Compartir link',
-      export: 'Exportar JSON',
       keys: 'Keys',
       values: 'Valores',
       paths: 'Rutas',
@@ -192,21 +182,17 @@
       indentSize: 'Tamaño de indentación',
       rememberLast: 'Recordar último JSON',
       typeBadges: 'Mostrar badges de tipo',
-      warnShare: 'Advertir para links grandes',
       language: 'Idioma',
       theme: 'Tema',
       statusReady: 'Listo.',
       loaded: 'JSON cargado correctamente.',
       invalidJson: 'JSON inválido. Revisá la sintaxis e intentá de nuevo.',
       copied: 'Copiado al portapapeles.',
-      exported: 'JSON exportado.',
       cleared: 'Entrada limpiada.',
       fetched: 'JSON obtenido correctamente.',
       fetchError: 'No se pudo obtener el JSON desde la URL. El servidor puede bloquear el acceso del navegador (CORS) o la respuesta no es válida.',
       noMatches: '0 coincidencias',
       selectNode: 'Seleccioná un nodo para inspeccionarlo.',
-      linkCopied: 'Link copiado.',
-      linkTooLarge: 'El JSON es demasiado grande para un link compartible seguro. Exportalo o usá un contenido más chico.',
       tableRows: 'filas',
       copiedPath: 'Ruta copiada.',
       copiedValue: 'Valor copiado.',
@@ -216,8 +202,6 @@
       rawEmpty: 'Cargá un JSON para ver la vista raw.',
       tableEmpty: 'Cargá un JSON para ver la tabla.',
       diffEmpty: 'Ejecutá un diff para ver cambios acá.',
-      sharingNotice: 'Los links compartidos incrustan el JSON en el hash de la URL para compartirlo sin servidor. Ideal para payloads chicos y medianos.',
-      loadFromHash: 'JSON cargado desde un link compartido.',
       filterApplied: 'Filtros aplicados.',
       browseTitle: 'Abrir archivo JSON',
       root: 'raíz',
@@ -256,8 +240,7 @@
       pathFormat: 'dot',
       indentSize: 2,
       rememberLastJson: true,
-      showTypeBadges: true,
-      openShareSmallOnly: true
+      showTypeBadges: true
     }
   };
 
@@ -268,7 +251,7 @@
   function cacheEls() {
     [
       'jsonInput','statusBox','treeView','rawView','tableView','diffView','searchInput','searchMeta','nodeDetails',
-      'languageSelect','themeSelect','pathFormat','indentSize','rememberLastJson','showTypeBadges','openShareSmallOnly',
+      'languageSelect','themeSelect','pathFormat','indentSize','rememberLastJson','showTypeBadges',
       'settingsModal','viewMode','searchKeys','searchValues','searchPaths','caseSensitive','filterMatchesOnly','hideNulls','hideEmpty',
       'typeFilter','leftDiffInput','rightDiffInput','urlInput','fileInput','dropZone','toggleInputPanelBtn','toggleDetailsPanelBtn'
     ].forEach(id => el[id] = $(id));
@@ -375,8 +358,6 @@
     $('collapseAllBtn').textContent = t('collapseAll');
     $('toggleInputPanelBtn').textContent = state.inputHidden ? t('showInput') : t('hideInput');
     $('toggleDetailsPanelBtn').textContent = state.detailsHidden ? t('showNodePanel') : t('hideNodePanel');
-    $('shareBtn').textContent = t('share');
-    $('exportBtn').textContent = t('export');
     $('search-keys-label').textContent = t('keys');
     $('search-values-label').textContent = t('values');
     $('search-paths-label').textContent = t('paths');
@@ -396,7 +377,6 @@
     $('indent-label').textContent = t('indentSize');
     $('remember-json-label').textContent = t('rememberLast');
     $('type-badges-label').textContent = t('typeBadges');
-    $('share-warning-label').textContent = t('warnShare');
     $('lang-label').textContent = t('language');
     $('theme-label').textContent = t('theme');
     $('copyDetailsBtn').textContent = t('copy');
@@ -895,51 +875,6 @@
     await navigator.clipboard.writeText(text);
   }
 
-  function exportJson() {
-    if (!state.data) return;
-    const blob = new Blob([JSON.stringify(state.data, null, state.settings.indentSize)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'json-viewer-export.json';
-    a.click();
-    URL.revokeObjectURL(url);
-    setStatus(t('exported'), 'success');
-  }
-
-  function encodeForHash(text) {
-    return btoa(unescape(encodeURIComponent(text)));
-  }
-
-  function decodeFromHash(text) {
-    return decodeURIComponent(escape(atob(text)));
-  }
-
-  async function shareCurrentJson() {
-    if (!state.data) return;
-    const text = JSON.stringify(state.data);
-    if (state.settings.openShareSmallOnly && text.length > 150000) {
-      setStatus(t('linkTooLarge'), 'warn');
-      return;
-    }
-    const url = `${location.origin}${location.pathname}#json=${encodeForHash(text)}`;
-    await copyText(url);
-    setStatus(`${t('linkCopied')} ${t('sharingNotice')}`, 'success');
-  }
-
-  function tryLoadFromHash() {
-    const hash = location.hash || '';
-    if (!hash.startsWith('#json=')) return;
-    try {
-      const decoded = decodeFromHash(hash.slice(6));
-      el.jsonInput.value = JSON.stringify(JSON.parse(decoded), null, state.settings.indentSize);
-      parseAndLoad(decoded, { silentStatus: true });
-      setStatus(t('loadFromHash'), 'success');
-    } catch {
-      setStatus(t('invalidJson'), 'error');
-    }
-  }
-
   function runDiff() {
     try {
       state.diffLeft = JSON.parse(el.leftDiffInput.value);
@@ -1018,7 +953,6 @@
     state.settings.indentSize = Number(el.indentSize.value) || 2;
     state.settings.rememberLastJson = el.rememberLastJson.checked;
     state.settings.showTypeBadges = el.showTypeBadges.checked;
-    state.settings.openShareSmallOnly = el.openShareSmallOnly.checked;
     saveSettings();
     applyTheme();
     updateLanguageUI();
@@ -1056,7 +990,6 @@
       showNodeDetails(null);
       setStatus(t('cleared'), 'success');
       localStorage.removeItem(JSON_STORAGE_KEY);
-      location.hash = '';
     });
     $('copyRawBtn').addEventListener('click', async () => {
       await copyText(el.jsonInput.value);
@@ -1088,8 +1021,6 @@
       state.viewMode = e.target.value;
       renderCurrentView();
     });
-    $('shareBtn').addEventListener('click', shareCurrentJson);
-    $('exportBtn').addEventListener('click', exportJson);
     $('runDiffBtn').addEventListener('click', runDiff);
     $('loadLeftFromMainBtn').addEventListener('click', () => { el.leftDiffInput.value = el.jsonInput.value; });
     $('loadRightFromMainBtn').addEventListener('click', () => { el.rightDiffInput.value = el.jsonInput.value; });
@@ -1125,7 +1056,7 @@
     $('closeSettingsBtn').addEventListener('click', () => el.settingsModal.classList.add('hidden'));
     document.querySelectorAll('[data-close-modal="true"]').forEach(node => node.addEventListener('click', () => el.settingsModal.classList.add('hidden')));
 
-    ['languageSelect','themeSelect','pathFormat','indentSize','rememberLastJson','showTypeBadges','openShareSmallOnly'].forEach(id => {
+    ['languageSelect','themeSelect','pathFormat','indentSize','rememberLastJson','showTypeBadges'].forEach(id => {
       $(id).addEventListener('change', applySettingsFromInputs);
     });
 
@@ -1134,7 +1065,6 @@
       setStatus(t('copied'), 'success');
     });
 
-    window.addEventListener('hashchange', tryLoadFromHash);
   }
 
   function syncInputsFromState() {
@@ -1144,7 +1074,6 @@
     el.indentSize.value = state.settings.indentSize;
     el.rememberLastJson.checked = state.settings.rememberLastJson;
     el.showTypeBadges.checked = state.settings.showTypeBadges;
-    el.openShareSmallOnly.checked = state.settings.openShareSmallOnly;
     el.viewMode.value = state.viewMode;
   }
 
@@ -1173,7 +1102,6 @@
     syncInputsFromState();
     applyTheme();
     updateLanguageUI();
-    tryLoadFromHash();
     setStatus(t('statusReady'));
   }
 
