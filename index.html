@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>JSON Viewer Pro</title>
-  <meta name="description" content="Modern browser-based JSON viewer with search, filters, diff, table view, and shareable links." />
+  <meta name="description" content="Modern browser-based JSON viewer with search, filters, diff, and table view." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -107,21 +107,17 @@
             <button id="toggleDetailsPanelBtn" class="button ghost compact">Hide node panel</button>
             <button id="expandAllBtn" class="button ghost">Expand all</button>
             <button id="collapseAllBtn" class="button ghost">Collapse all</button>
-            <button id="shareBtn" class="button ghost">Share link</button>
-            <button id="exportBtn" class="button ghost">Export JSON</button>
           </div>
         </div>
 
         <div class="toolbar grid-toolbar">
-          <div class="search-block compact-search">
+          <div class="search-block compact-search search-row">
             <input id="searchInput" class="text-input compact" type="text" placeholder="Search by key, value, or path" />
-            <div class="row gap-sm wrap mt-sm">
+            <div class="row gap-sm search-options-row">
               <label><input id="searchKeys" type="checkbox" checked /> <span id="search-keys-label">Keys</span></label>
               <label><input id="searchValues" type="checkbox" checked /> <span id="search-values-label">Values</span></label>
               <label><input id="searchPaths" type="checkbox" checked /> <span id="search-paths-label">Paths</span></label>
               <label><input id="caseSensitive" type="checkbox" /> <span id="case-sensitive-label">Case sensitive</span></label>
-            </div>
-            <div class="row gap-sm wrap mt-sm">
               <button id="findBtn" class="button primary compact">Find</button>
               <button id="prevMatchBtn" class="button ghost compact">Previous</button>
               <button id="nextMatchBtn" class="button ghost compact">Next</button>
@@ -129,13 +125,11 @@
             </div>
           </div>
 
-          <div class="filters-block">
-            <div class="row gap-sm wrap">
+          <div class="filters-block filters-row">
+            <div class="row gap-sm filter-controls-row">
               <label><input id="filterMatchesOnly" type="checkbox" /> <span id="matches-only-label">Show only matches</span></label>
               <label><input id="hideNulls" type="checkbox" /> <span id="hide-nulls-label">Hide nulls</span></label>
               <label><input id="hideEmpty" type="checkbox" /> <span id="hide-empty-label">Hide empty arrays/objects</span></label>
-            </div>
-            <div class="row gap-sm wrap mt-sm">
               <label class="switch-group inline">
                 <span id="type-filter-label">Type</span>
                 <select id="typeFilter" class="select">
@@ -222,10 +216,6 @@
         <label class="field checkbox-field">
           <input id="showTypeBadges" type="checkbox" checked />
           <span id="type-badges-label">Show type badges</span>
-        </label>
-        <label class="field checkbox-field">
-          <input id="openShareSmallOnly" type="checkbox" checked />
-          <span id="share-warning-label">Warn for large share links</span>
         </label>
       </div>
     </div>

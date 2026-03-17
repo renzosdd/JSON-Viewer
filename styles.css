@@ -75,6 +75,7 @@ body {
 .input-tools { justify-content: flex-end; }
 #clearBtn { min-width: 42px; }
 .wrap { flex-wrap: wrap; }
+.nowrap { flex-wrap: nowrap; }
 .gap-sm { gap: 8px; }
 .mt-sm { margin-top: 10px; }
 .flex-1 { flex: 1; }
@@ -164,8 +165,30 @@ textarea {
 .search-block { display: grid; gap: 10px; }
 .search-block, .filters-block { padding: 12px 14px; }
 .compact-search {
-  max-width: 520px;
-  justify-self: start;
+  max-width: 100%;
+  justify-self: stretch;
+}
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.search-row .text-input {
+  flex: 1;
+  min-width: 240px;
+}
+.search-options-row, .filter-controls-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
+.search-options-row {
+  overflow-x: auto;
+}
+.filters-row {
+  overflow-x: auto;
 }
 .text-input.compact {
   padding: 8px 10px;
@@ -275,4 +298,6 @@ mark {
   .topbar { flex-direction: row; align-items: center; }
   .app { padding: 12px; }
   .panel { padding: 14px; }
+  .search-row { flex-wrap: wrap; }
+  .search-options-row, .filter-controls-row { flex-wrap: wrap; white-space: normal; }
 }
