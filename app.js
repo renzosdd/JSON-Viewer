@@ -568,7 +568,6 @@
   function renderRowHtml(node) {
     const key = node.key !== null && node.key !== undefined ? `<span class="key">${escapeHtml(String(node.key))}</span>:` : `<span class="key">${t('root')}</span>`;
     const typeBadge = state.settings.showTypeBadges ? `<span class="type-badge">${escapeHtml(t(`typeNames.${node.type}`))}</span>` : '';
-    const path = `<span class="path">${escapeHtml(formatPath(node.path))}</span>`;
     let valueHtml = '';
 
     if (node.type === 'object') valueHtml = `<span class="value">{ ${node.size} }</span>`;
@@ -581,13 +580,10 @@
       : `<span class="key">${t('root')}</span>`;
 
     return `
-      <div class="row wrap gap-sm">
+      <div class="row wrap gap-sm" title="${escapeHtml(formatPath(node.path))}">
         ${node.key !== null && node.key !== undefined ? highlightedKey : key}
         ${typeBadge}
         ${valueHtml}
-      </div>
-      <div class="row wrap gap-sm mt-sm">
-        ${path}
       </div>
     `;
   }
